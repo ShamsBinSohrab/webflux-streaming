@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.publisher.Sinks;
 import reactor.core.publisher.Sinks.Many;
 
@@ -38,6 +39,13 @@ class PaymentRepositoryImpl implements PaymentRepository {
             Flux.fromIterable(T_PAYMENT.values()),
             paymentStream.asFlux()
         );
+    }
+
+    @Override
+    public Mono<Payment> save(Payment payment) {
+        T_PAYMENT.put(payment.id(), payment);
+        paymentStream.tryEmitNext(payment);
+        return Mono.just(payment);
     }
 
     @Scheduled(fixedRate = 1, timeUnit = TimeUnit.SECONDS)

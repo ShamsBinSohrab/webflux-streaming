@@ -4,6 +4,7 @@ import com.petprojects.webfluxstreaming.entity.Payment;
 import com.petprojects.webfluxstreaming.repository.PaymentRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 public class PaymentService {
@@ -20,5 +21,9 @@ public class PaymentService {
 
     public Flux<Payment> getPaymentStream() {
         return paymentRepository.streamAllPayments();
+    }
+
+    public Mono<Payment> newPayment(Payment payment) {
+        return paymentRepository.save(payment);
     }
 }
